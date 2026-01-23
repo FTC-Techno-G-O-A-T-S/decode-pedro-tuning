@@ -1,33 +1,29 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import com.pedropathing.control.FilteredPIDFCoefficients;
+import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.localization.Encoder;
 import com.pedropathing.ftc.localization.constants.ThreeWheelConstants;
+import com.pedropathing.ftc.localization.constants.ThreeWheelIMUConstants;
 import com.pedropathing.paths.PathConstraints;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(13); //kg
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
+            .mass(12.7)
+            .forwardZeroPowerAcceleration(-26.77900647735631)//divide ZPAM by 4
+            .lateralZeroPowerAcceleration(-54.321782078788345)
+            .translationalPIDFCoefficients(new PIDFCoefficients(.1,0,0,.03))
+            .headingPIDFCoefficients(new PIDFCoefficients(.8,0,0.01,.025))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.025,0,0.00001,0.6, 0.01))
+            .centripetalScaling(0.0003);
 
-    public static ThreeWheelConstants localizerConstants = new ThreeWheelConstants()
-            .forwardTicksToInches(.0210905711558138) //old .08416559922698376
-            .strafeTicksToInches(.025055301110271783) // old .0012062873721464466
-            .turnTicksToInches(.004506431001040312) //old .0023277343012744244
-            .leftPodY(4.8)
-            .rightPodY(-4.8)
-            .strafePodX(-4)
-            .leftEncoder_HardwareMapName("fl")
-            .rightEncoder_HardwareMapName("fr")
-            .strafeEncoder_HardwareMapName("bl")
-            .leftEncoderDirection(Encoder.FORWARD)
-            .rightEncoderDirection(Encoder.FORWARD)
-            .strafeEncoderDirection(Encoder.REVERSE);
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
             .xVelocity(70.84822083065745)
@@ -40,11 +36,29 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE);
+
+    public static ThreeWheelConstants localizerConstants = new ThreeWheelConstants()
+            .forwardTicksToInches(-.016375332948529386) //start .001989436789
+            .strafeTicksToInches(-.0019556859008643527) // start .001989436789
+            .turnTicksToInches(-.003798399178143824)
+            .leftPodY(4.8)
+            .rightPodY(-4.8)
+            .strafePodX(-4)
+            .leftEncoder_HardwareMapName("fl")
+            .rightEncoder_HardwareMapName("fr")
+            .strafeEncoder_HardwareMapName("bl")
+            .leftEncoderDirection(Encoder.FORWARD)
+            .rightEncoderDirection(Encoder.FORWARD)
+            .strafeEncoderDirection(Encoder.REVERSE);
+    //.IMU_HardwareMapName("imu")
+    //.IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
+    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
+
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
-                .threeWheelLocalizer(localizerConstants)
                 .mecanumDrivetrain(driveConstants)
+                .threeWheelLocalizer(localizerConstants)
                 .build();
     }
 }
