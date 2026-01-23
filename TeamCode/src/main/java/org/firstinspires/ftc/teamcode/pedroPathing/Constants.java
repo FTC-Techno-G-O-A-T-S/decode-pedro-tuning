@@ -16,9 +16,9 @@ public class Constants {
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
     public static ThreeWheelConstants localizerConstants = new ThreeWheelConstants()
-            .forwardTicksToInches(.08416559922698376)
-            .strafeTicksToInches(.0012062873721464466)
-            .turnTicksToInches(.0023277343012744244)
+            .forwardTicksToInches(.0210905711558138) //old .08416559922698376
+            .strafeTicksToInches(.025055301110271783) // old .0012062873721464466
+            .turnTicksToInches(.004506431001040312) //old .0023277343012744244
             .leftPodY(4.8)
             .rightPodY(-4.8)
             .strafePodX(-4)
